@@ -4,55 +4,54 @@
 
 @layer base {
   :root {
-    --background: 220 20% 10%;
-    --foreground: 210 20% 90%;
+    --background: 220 14% 96%;
+    --foreground: 220 20% 12%;
 
-    --card: 220 18% 13%;
-    --card-foreground: 210 20% 90%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 12%;
 
-    --popover: 220 18% 13%;
-    --popover-foreground: 210 20% 90%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 12%;
 
-    --primary: 199 89% 48%;
-    --primary-foreground: 220 20% 6%;
+    --primary: 199 89% 40%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 16% 18%;
-    --secondary-foreground: 210 20% 85%;
+    --secondary: 220 14% 92%;
+    --secondary-foreground: 220 20% 20%;
 
-    --muted: 220 14% 16%;
-    --muted-foreground: 215 12% 55%;
+    --muted: 220 14% 93%;
+    --muted-foreground: 215 12% 50%;
 
-    --accent: 220 16% 20%;
-    --accent-foreground: 210 20% 90%;
+    --accent: 220 14% 90%;
+    --accent-foreground: 220 20% 12%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 14% 20%;
-    --input: 220 14% 18%;
-    --ring: 199 89% 48%;
+    --border: 220 13% 87%;
+    --input: 220 13% 93%;
+    --ring: 199 89% 40%;
 
     --radius: 0.5rem;
 
-    /* Trading-specific tokens */
-    --buy: 152 69% 41%;
+    --buy: 152 69% 36%;
     --buy-foreground: 0 0% 100%;
     --sell: 0 72% 51%;
     --sell-foreground: 0 0% 100%;
-    --buy-muted: 152 40% 15%;
-    --sell-muted: 0 40% 15%;
+    --buy-muted: 152 40% 92%;
+    --sell-muted: 0 40% 93%;
 
-    --field-hint: 199 60% 60%;
-    --label: 215 12% 55%;
+    --field-hint: 199 40% 55%;
+    --label: 215 12% 50%;
 
-    --sidebar-background: 220 18% 11%;
-    --sidebar-foreground: 210 20% 85%;
-    --sidebar-primary: 199 89% 48%;
-    --sidebar-primary-foreground: 220 20% 6%;
-    --sidebar-accent: 220 16% 18%;
-    --sidebar-accent-foreground: 210 20% 90%;
-    --sidebar-border: 220 14% 20%;
-    --sidebar-ring: 199 89% 48%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 199 89% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 92%;
+    --sidebar-accent-foreground: 220 20% 12%;
+    --sidebar-border: 220 13% 87%;
+    --sidebar-ring: 199 89% 40%;
   }
 }
 
