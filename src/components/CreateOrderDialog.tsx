@@ -173,29 +173,31 @@ export default function CreateOrderDialog({ open, onOpenChange }: CreateOrderDia
               </div>
             )}
 
-            {/* Buy/Sell + Order Type Row */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="label-text block mb-1.5">Side</label>
-                <div className="grid grid-cols-2 gap-1 bg-input rounded-md p-0.5">
-                  <button
-                    onClick={() => setSide("Buy")}
-                    className={`flex items-center justify-center gap-1.5 h-8 rounded text-sm font-semibold transition-all ${
-                      side === "Buy" ? "bg-buy text-buy-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    <TrendingUp className="h-3.5 w-3.5" /> Buy
-                  </button>
-                  <button
-                    onClick={() => setSide("Sell")}
-                    className={`flex items-center justify-center gap-1.5 h-8 rounded text-sm font-semibold transition-all ${
-                      side === "Sell" ? "bg-sell text-sell-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    <TrendingDown className="h-3.5 w-3.5" /> Sell
-                  </button>
-                </div>
+            {/* Buy/Sell */}
+            <div>
+              <label className="label-text block mb-1.5">Side</label>
+              <div className="grid grid-cols-2 gap-1 bg-input rounded-md p-0.5 w-1/2">
+                <button
+                  onClick={() => setSide("Buy")}
+                  className={`flex items-center justify-center gap-1.5 h-8 rounded text-sm font-semibold transition-all ${
+                    side === "Buy" ? "bg-buy text-buy-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <TrendingUp className="h-3.5 w-3.5" /> Buy
+                </button>
+                <button
+                  onClick={() => setSide("Sell")}
+                  className={`flex items-center justify-center gap-1.5 h-8 rounded text-sm font-semibold transition-all ${
+                    side === "Sell" ? "bg-sell text-sell-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <TrendingDown className="h-3.5 w-3.5" /> Sell
+                </button>
               </div>
+            </div>
+
+            {/* Order Type + Limit Price (if applicable) + TIF in one row */}
+            <div className={`grid gap-3 ${orderType !== "Market" ? "grid-cols-3" : "grid-cols-2"}`}>
               <div>
                 <label className="label-text block mb-1.5">Order Type</label>
                 <select
@@ -208,24 +210,35 @@ export default function CreateOrderDialog({ open, onOpenChange }: CreateOrderDia
                   <option>Stop Loss</option>
                 </select>
               </div>
+              {orderType !== "Market" && (
+                <div>
+                  <label className="label-text block mb-1.5">{orderType === "Limit" ? "Limit Price" : "Stop Price"}</label>
+                  <input
+                    type="number"
+                    value={limitPrice}
+                    onChange={(e) => setLimitPrice(e.target.value)}
+                    placeholder="Enter price…"
+                    className="w-full h-8 px-3 rounded-md bg-input border border-border text-sm font-mono text-foreground placeholder:field-hint focus:outline-none focus:ring-1 focus:ring-ring"
+                  />
+                </div>
+              )}
+              <div>
+                <label className="label-text block mb-1.5">Time in Force</label>
+                <select
+                  value={tif}
+                  onChange={(e) => setTif(e.target.value as TIF)}
+                  className="w-full h-8 px-2 rounded-md bg-input border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                >
+                  <option>Day</option>
+                  <option>GTC</option>
+                  <option>IOC</option>
+                  <option>FOK</option>
+                </select>
+              </div>
             </div>
 
-            {/* Limit price if applicable */}
-            {orderType !== "Market" && (
-              <div>
-                <label className="label-text block mb-1.5">{orderType === "Limit" ? "Limit Price" : "Stop Price"}</label>
-                <input
-                  type="number"
-                  value={limitPrice}
-                  onChange={(e) => setLimitPrice(e.target.value)}
-                  placeholder="Enter price…"
-                  className="w-full h-8 px-3 rounded-md bg-input border border-border text-sm font-mono text-foreground placeholder:field-hint focus:outline-none focus:ring-1 focus:ring-ring"
-                />
-              </div>
-            )}
-
-            {/* Accounts + TIF Row */}
-            <div className="grid grid-cols-3 gap-3">
+            {/* Accounts Row */}
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="label-text block mb-1.5">Investment A/C</label>
                 <select
@@ -249,19 +262,6 @@ export default function CreateOrderDialog({ open, onOpenChange }: CreateOrderDia
                   <option value="">Select…</option>
                   <option>CASH-001 USD</option>
                   <option>CASH-002 EUR</option>
-                </select>
-              </div>
-              <div>
-                <label className="label-text block mb-1.5">Time in Force</label>
-                <select
-                  value={tif}
-                  onChange={(e) => setTif(e.target.value as TIF)}
-                  className="w-full h-8 px-2 rounded-md bg-input border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                >
-                  <option>Day</option>
-                  <option>GTC</option>
-                  <option>IOC</option>
-                  <option>FOK</option>
                 </select>
               </div>
             </div>
