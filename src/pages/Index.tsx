@@ -23,6 +23,13 @@ const Index = () => {
         <BookOpen className="h-4 w-4" />
         Order Book
       </button>
+      <button
+        onClick={() => navigate("/approvals")}
+        className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-secondary text-secondary-foreground font-semibold text-sm hover:opacity-90 transition-opacity shadow-lg"
+      >
+        <ShieldCheck className="h-4 w-4" />
+        Approvals
+      </button>
       <CreateOrderDialog open={orderOpen} onOpenChange={setOrderOpen} />
     </div>
   );
