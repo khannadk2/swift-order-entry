@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateOrderDialog from "@/components/CreateOrderDialog";
-import { Plus, BookOpen } from "lucide-react";
+import { Plus, BookOpen, ShieldCheck } from "lucide-react";
 
 const Index = () => {
   const [orderOpen, setOrderOpen] = useState(false);
