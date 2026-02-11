@@ -41,6 +41,10 @@
     --buy-muted: 152 40% 92%;
     --sell-muted: 0 40% 93%;
 
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 92% 20%;
+    --warning-muted: 38 40% 92%;
+
     --field-hint: 199 40% 55%;
     --label: 215 12% 50%;
 

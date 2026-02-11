@@ -67,6 +67,11 @@ export default {
           foreground: "hsl(var(--sell-foreground))",
           muted: "hsl(var(--sell-muted))",
         },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+          muted: "hsl(var(--warning-muted))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
