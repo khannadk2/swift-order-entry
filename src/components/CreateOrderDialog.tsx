@@ -142,12 +142,12 @@ export default function CreateOrderDialog({ open, onOpenChange }: CreateOrderDia
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={`p-0 gap-0 bg-card border-border overflow-hidden transition-all duration-300 ease-in-out ${formComplete && checks.length > 0 ? "max-w-[1080px]" : "max-w-[820px]"}`}>
+      <DialogContent className="p-0 gap-0 bg-card border-border overflow-hidden max-w-[1080px]">
         <DialogHeader className="px-5 pt-4 pb-3 border-b border-border">
         <DialogTitle className="text-base font-semibold tracking-tight text-foreground">Create New Order</DialogTitle>
         </DialogHeader>
 
-        <div className={`grid divide-x divide-border transition-all duration-300 ease-in-out ${formComplete && checks.length > 0 ? "grid-cols-[1fr_260px_240px]" : "grid-cols-[1fr_260px]"}`}>
+        <div className="grid grid-cols-[1fr_260px_240px] divide-x divide-border">
           {/* Left: Inputs */}
           <div className="p-4 space-y-3">
             {/* Security Search */}
@@ -457,12 +457,18 @@ export default function CreateOrderDialog({ open, onOpenChange }: CreateOrderDia
             </button>
           </div>
 
-          {/* Right: Compliance Column (slide-in) */}
-          {formComplete && checks.length > 0 && (
-            <div className="p-4 flex flex-col bg-secondary/20 animate-in slide-in-from-right-4 fade-in duration-300">
+          {/* Right: Compliance Column (always visible) */}
+          <div className="p-4 flex flex-col bg-secondary/20">
+            {formComplete && checks.length > 0 ? (
               <ComplianceColumn checks={checks} outcome={outcome} />
-            </div>
-          )}
+            ) : (
+              <div className="flex-1 flex items-center justify-center">
+                <p className="text-xs text-muted-foreground text-center leading-relaxed">
+                  Pre-trade checks will appear here
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
