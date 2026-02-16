@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, TrendingUp, TrendingDown, ArrowUpDown } from "lucide-react";
+import { Search, TrendingUp, TrendingDown, ArrowUpDown, Send } from "lucide-react";
+import PreTradeChecksPanel, { usePreTradeOutcome } from "@/components/PreTradeChecks";
 
 type SecurityType = "Equity" | "Bond" | "Fund";
 type Side = "Buy" | "Sell";
@@ -68,7 +69,18 @@ export default function CreateOrderDialog({ open, onOpenChange }: CreateOrderDia
   const fees = orderAmount * 0.001;
   const total = side === "Buy" ? orderAmount + fees : orderAmount - fees;
 
-  const canSubmit = selectedSecurity && inputValue && parseFloat(inputValue) > 0 && investmentAccount && cashAccount;
+  const { checks, outcome } = usePreTradeOutcome({
+    security: selectedSecurity,
+    side,
+    orderAmount,
+    limitPrice,
+    orderType,
+    investmentAccount,
+    cashAccount,
+  });
+
+  const formComplete = selectedSecurity && inputValue && parseFloat(inputValue) > 0 && investmentAccount && cashAccount;
+  const canSubmit = formComplete && outcome !== "hard";
 
   const typeFilters: (SecurityType | "All")[] = ["All", "Equity", "Bond", "Fund"];
 
@@ -297,6 +309,11 @@ export default function CreateOrderDialog({ open, onOpenChange }: CreateOrderDia
                 </div>
               </div>
             </div>
+
+            {/* Pre-Trade Checks */}
+            {formComplete && checks.length > 0 && (
+              <PreTradeChecksPanel checks={checks} outcome={outcome} />
+            )}
           </div>
 
           {/* Right: Order Summary */}
@@ -363,14 +380,28 @@ export default function CreateOrderDialog({ open, onOpenChange }: CreateOrderDia
             <button
               disabled={!canSubmit}
               className={`mt-3 w-full h-9 rounded-md text-sm font-semibold transition-all ${
-                canSubmit
-                  ? side === "Buy"
-                    ? "bg-buy text-buy-foreground hover:opacity-90 shadow-md"
-                    : "bg-sell text-sell-foreground hover:opacity-90 shadow-md"
-                  : "bg-muted text-muted-foreground cursor-not-allowed"
+                !formComplete
+                  ? "bg-muted text-muted-foreground cursor-not-allowed"
+                  : outcome === "hard"
+                  ? "bg-sell/20 text-sell cursor-not-allowed"
+                  : outcome === "soft"
+                  ? "bg-warning text-warning-foreground hover:opacity-90 shadow-md"
+                  : side === "Buy"
+                  ? "bg-buy text-buy-foreground hover:opacity-90 shadow-md"
+                  : "bg-sell text-sell-foreground hover:opacity-90 shadow-md"
               }`}
             >
-              {canSubmit ? `${side} ${selectedSecurity?.symbol}` : "Complete Order Details"}
+              {!formComplete ? (
+                "Complete Order Details"
+              ) : outcome === "hard" ? (
+                "Blocked by Pre-Trade Check"
+              ) : outcome === "soft" ? (
+                <span className="flex items-center justify-center gap-1.5">
+                  <Send className="h-3.5 w-3.5" /> Send for Approval
+                </span>
+              ) : (
+                `${side} ${selectedSecurity?.symbol}`
+              )}
             </button>
           </div>
         </div>
