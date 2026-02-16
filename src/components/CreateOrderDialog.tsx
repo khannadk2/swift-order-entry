@@ -1,7 +1,63 @@
 import { useState, useMemo } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, TrendingUp, TrendingDown, ArrowUpDown, Send } from "lucide-react";
-import PreTradeChecksPanel, { usePreTradeOutcome } from "@/components/PreTradeChecks";
+import { Search, TrendingUp, TrendingDown, ArrowUpDown, Send, ShieldAlert, ShieldCheck, ShieldX, AlertTriangle } from "lucide-react";
+import { usePreTradeOutcome, type OverallOutcome } from "@/components/PreTradeChecks";
+
+type Severity = "hard" | "soft" | "warning" | "pass";
+
+const severityConfig: Record<Severity, { icon: typeof ShieldX; color: string; label: string }> = {
+  hard: { icon: ShieldX, color: "text-sell", label: "Blocked" },
+  soft: { icon: ShieldAlert, color: "text-warning", label: "Approval Required" },
+  warning: { icon: AlertTriangle, color: "text-warning", label: "Warning" },
+  pass: { icon: ShieldCheck, color: "text-buy", label: "Pass" },
+};
+
+function ComplianceColumn({ checks, outcome }: { checks: { name: string; severity: Severity; message: string }[]; outcome: OverallOutcome }) {
+  const nonPass = checks.filter((c) => c.severity !== "pass");
+  const pass = checks.filter((c) => c.severity === "pass");
+  const cfg = severityConfig[outcome];
+  const SummaryIcon = cfg.icon;
+
+  return (
+    <>
+      <div className="flex items-center gap-2 mb-3">
+        <SummaryIcon className={`h-4 w-4 ${cfg.color}`} />
+        <h3 className={`text-xs font-semibold ${cfg.color}`}>
+          {outcome === "pass" ? "All Checks Passed" : `${nonPass.length} Issue${nonPass.length > 1 ? "s" : ""}`}
+        </h3>
+      </div>
+      <div className="space-y-2 flex-1 overflow-auto">
+        {nonPass.map((check, i) => {
+          const c = severityConfig[check.severity];
+          const Icon = c.icon;
+          return (
+            <div key={i} className="rounded-md border border-border/50 bg-card/50 p-2">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Icon className={`h-3 w-3 shrink-0 ${c.color}`} />
+                <span className={`text-[11px] font-semibold ${c.color}`}>{check.name}</span>
+                <span className={`ml-auto text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
+                  check.severity === "hard" ? "bg-sell/10 text-sell" : "bg-warning/10 text-warning"
+                }`}>{c.label}</span>
+              </div>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">{check.message}</p>
+            </div>
+          );
+        })}
+        {pass.length > 0 && (
+          <div className="pt-1 border-t border-border/50">
+            <div className="flex items-center gap-1.5 text-buy mb-1.5">
+              <ShieldCheck className="h-3 w-3" />
+              <span className="text-[11px] font-medium">{pass.length} Passed</span>
+            </div>
+            {pass.map((check, i) => (
+              <div key={i} className="text-[11px] text-muted-foreground pl-4.5 py-0.5">{check.name}</div>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
 
 type SecurityType = "Equity" | "Bond" | "Fund";
 type Side = "Buy" | "Sell";
@@ -86,12 +142,12 @@ export default function CreateOrderDialog({ open, onOpenChange }: CreateOrderDia
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[820px] p-0 gap-0 bg-card border-border overflow-hidden">
+      <DialogContent className={`p-0 gap-0 bg-card border-border overflow-hidden transition-all duration-300 ease-in-out ${formComplete && checks.length > 0 ? "max-w-[1080px]" : "max-w-[820px]"}`}>
         <DialogHeader className="px-5 pt-4 pb-3 border-b border-border">
-          <DialogTitle className="text-base font-semibold tracking-tight text-foreground">Create New Order</DialogTitle>
+        <DialogTitle className="text-base font-semibold tracking-tight text-foreground">Create New Order</DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-[1fr_260px] divide-x divide-border">
+        <div className={`grid divide-x divide-border transition-all duration-300 ease-in-out ${formComplete && checks.length > 0 ? "grid-cols-[1fr_260px_240px]" : "grid-cols-[1fr_260px]"}`}>
           {/* Left: Inputs */}
           <div className="p-4 space-y-3">
             {/* Security Search */}
@@ -310,10 +366,6 @@ export default function CreateOrderDialog({ open, onOpenChange }: CreateOrderDia
               </div>
             </div>
 
-            {/* Pre-Trade Checks */}
-            {formComplete && checks.length > 0 && (
-              <PreTradeChecksPanel checks={checks} outcome={outcome} />
-            )}
           </div>
 
           {/* Right: Order Summary */}
@@ -404,6 +456,13 @@ export default function CreateOrderDialog({ open, onOpenChange }: CreateOrderDia
               )}
             </button>
           </div>
+
+          {/* Right: Compliance Column (slide-in) */}
+          {formComplete && checks.length > 0 && (
+            <div className="p-4 flex flex-col bg-secondary/20 animate-in slide-in-from-right-4 fade-in duration-300">
+              <ComplianceColumn checks={checks} outcome={outcome} />
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
